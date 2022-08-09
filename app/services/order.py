@@ -23,7 +23,7 @@ def get_order_by_id(_id: int):
 
 
 @order.route('/', methods=GET)
-def get_orders():
+def get_all_orders():
     orders, error = OrderController.get_all()
     response = orders if not error else {'error': error}
     status_code = 200 if orders else 404 if not error else 400
