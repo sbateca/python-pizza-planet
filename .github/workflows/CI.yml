@@ -1,0 +1,24 @@
+name: CI for Pizza planet
+on:
+  pull_request:
+    branches:
+    - "**"
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Pizza planet API
+        uses: actions/checkout@v3
+      
+      - name: setup Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Test with pytest
+        run: |
+          python manage.py test
