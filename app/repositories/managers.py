@@ -72,9 +72,11 @@ class OrderManager(BaseManager):
         cls.session.flush()
         cls.session.refresh(new_order)
         for ingredient in ingredients:
-            for beverage in beverages:
-                cls.session.add_all(OrderDetail(order_id=new_order._id, ingredient_id=ingredient._id, ingredient_price=ingredient.price,
-                                                beverage_id = beverage.id, beverage_price = beverage.price))
+            cls.session.add(OrderDetail(order_id=new_order._id, ingredient_id=ingredient._id, ingredient_price=ingredient.price,
+                                                 beverage_id = None, beverage_price = None))
+        for beverage in beverages:
+            cls.session.add(OrderDetail(order_id=new_order._id, ingredient_id=None, ingredient_price=None,
+                                                 beverage_id = beverage._id, beverage_price = beverage.price))
         cls.session.commit()
         return cls.serializer().dump(new_order)
 
