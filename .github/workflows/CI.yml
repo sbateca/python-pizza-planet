@@ -23,7 +23,9 @@ jobs:
         run: |
           python manage.py test
       
-      - name: Generate coverage report
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        run: bash <(curl -Os https://uploader.codecov.io/latest/linux/codecov chmod +x codecov ./codecov)
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: false
+          flags: unittests
+          name: codecov-umbrella
