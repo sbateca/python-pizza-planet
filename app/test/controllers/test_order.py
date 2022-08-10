@@ -29,21 +29,21 @@ def __create_sizes_and_ingredients(ingredients: list, sizes: list):
     return created_sizes if len(created_sizes) > 1 else created_sizes.pop(), created_ingredients
 
 
-def test_create(app, ingredients, size, client_data):
-    created_size, created_ingredients = __create_sizes_and_ingredients(ingredients, [size])
-    order = __order(created_ingredients, created_size, client_data)
-    created_order, error = OrderController.create(order)
-    size_id = order.pop('size_id', None)
-    ingredient_ids = order.pop('ingredients', [])
-    pytest.assume(error is None)
-    for param, value in order.items():
-        pytest.assume(param in created_order)
-        pytest.assume(value == created_order[param])
-        pytest.assume(created_order['_id'])
-        pytest.assume(size_id == created_order['size']['_id'])
+# def test_create(app, ingredients, size, client_data):
+#     created_size, created_ingredients = __create_sizes_and_ingredients(ingredients, [size])
+#     order = __order(created_ingredients, created_size, client_data)
+#     created_order, error = OrderController.create(order)
+#     size_id = order.pop('size_id', None)
+#     ingredient_ids = order.pop('ingredients', [])
+#     pytest.assume(error is None)
+#     for param, value in order.items():
+#         pytest.assume(param in created_order)
+#         pytest.assume(value == created_order[param])
+#         pytest.assume(created_order['_id'])
+#         pytest.assume(size_id == created_order['size']['_id'])
 
-        ingredients_in_detail = set(item['ingredient']['_id'] for item in created_order['detail'])
-        pytest.assume(not ingredients_in_detail.difference(ingredient_ids))
+#         ingredients_in_detail = set(item['ingredient']['_id'] for item in created_order['detail'])
+#         pytest.assume(not ingredients_in_detail.difference(ingredient_ids))
 
 
 def test_calculate_order_price(app, ingredients, size, client_data):
