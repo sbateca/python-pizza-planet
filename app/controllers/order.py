@@ -38,3 +38,27 @@ class OrderController(BaseController):
             return cls.manager.create(order_with_price, ingredients, beverages), None
         except (SQLAlchemyError, RuntimeError) as ex:
             return None, str(ex)
+        
+        
+    @classmethod
+    def get_max_ingredient_saled(cls):
+        try:
+            return cls.manager.get_max_ingredient_saled(), None
+        except (SQLAlchemyError, RuntimeError) as ex:
+            return None, str(ex)
+
+
+    @classmethod
+    def get_highest_earning_month(cls):
+        try:
+            return cls.manager.get_highest_earning_month(), None
+        except (SQLAlchemyError, RuntimeError) as ex:
+            return None, str(ex)
+
+
+    @classmethod
+    def get_three_best_customers(cls):
+        try:
+            return cls.manager.get_three_best_customers(), None
+        except (SQLAlchemyError, RuntimeError) as ex:
+            return None, str(ex)

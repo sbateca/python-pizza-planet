@@ -52,12 +52,6 @@ def populate_table_order_order_detail(meta_data, data, table_name):
     new_data_db = table.insert().values(data).return_defaults()
     result = new_data_db.execute()
     return result.inserted_primary_key_rows[0]
-    
-
-def select_table_example(conn):
-    query_text = "select * from size"
-    result = conn.execute(query_text).fetchall()
-    return result
 
 
 def get_element_by_id(conn, table_name, id):
