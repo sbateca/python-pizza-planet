@@ -87,6 +87,7 @@ def calculate_price(size_choosed, new_ingredients_list, new_beverages_list):
         
     return total_price
 
+
 def insert_order_order_detail_fake_data():
      # select one size for the order
     id_size_random = random.choice(id_new_sizes)

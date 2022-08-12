@@ -100,6 +100,7 @@ def generate_random_order(customer_name, customer_dni, customer_phone, customer_
         "size_id": size_id
     }
 
+
 def generate_random_order_detail(ingredient_price, order_id, ingredient_id, beverage_price, beverage_id):
     return {
         "ingredient_price": ingredient_price,
