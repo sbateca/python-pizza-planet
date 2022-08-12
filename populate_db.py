@@ -1,6 +1,6 @@
 from app.common.utils import (generate_random_list_dni_customers, get_random_size, get_random_ingredient,
                               get_random_beverage, generate_random_list_names, generate_random_list_phone_customers,
-                              generate_random_list_address_customers, generate_random_order, generate_random_date)
+                              generate_random_list_address_customers, generate_random_order, generate_random_order_detail)
 from sqlalchemy import create_engine, MetaData, text
 
 import os
@@ -47,8 +47,8 @@ def populate_table(meta_data, table_name, position):
     return result.inserted_primary_key_rows[0]
 
 
-def populate_table_order(meta_data, data):
-    table = meta_data.tables['order']
+def populate_table_order_order_detail(meta_data, data, table_name):
+    table = meta_data.tables[table_name]
     new_data_db = table.insert().values(data).return_defaults()
     result = new_data_db.execute()
     return result.inserted_primary_key_rows[0]
@@ -86,7 +86,34 @@ def calculate_price(size_choosed, new_ingredients_list, new_beverages_list):
         total_price += beverage['price']
         
     return total_price
- 
+
+def insert_order_order_detail_fake_data():
+     # select one size for the order
+    id_size_random = random.choice(id_new_sizes)
+    size_choosed = get_element_by_id(conn,'size',id_size_random) 
+    
+    # get ingredients and beverage by id (random)
+    new_ingredients_list = get_list_elements_by_random_id('ingredient', id_new_ingredients)
+    new_beverages_list =get_list_elements_by_random_id('beverage', id_new_beverages)
+    
+    total_price = calculate_price(size_choosed, new_ingredients_list, new_beverages_list)
+    order_data = generate_random_order(customers_names[random.randint(0, len(customers_names)-1)],
+                                       customers_dni[random.randint(0, len(customers_dni)-1)],
+                                       customers_phones[random.randint(0, len(customers_phones)-1)],
+                                       customers_address[random.randint(0, len(customers_address)-1)],
+                                       total_price,
+                                       size_choosed['_id'])
+    
+    order_id = populate_table_order_order_detail(meta_data,order_data, 'order')
+    
+    # generate order detail
+    for ingredient in new_ingredients_list:
+        order_detail_data = generate_random_order_detail(ingredient['price'], order_id[0], ingredient['_id'], None, None)
+        populate_table_order_order_detail(meta_data, order_detail_data, 'order_detail')
+    
+    for beverage in new_beverages_list:
+        order_detail_data = generate_random_order_detail(None, order_id[0], None, beverage['price'], beverage['_id'])
+        populate_table_order_order_detail(meta_data, order_detail_data, 'order_detail')
            
 
 if __name__ == "__main__":
@@ -120,17 +147,6 @@ if __name__ == "__main__":
     for index in range(5):
         id_beverages = populate_table(meta_data, 'beverage', index)
         id_new_beverages.append(id_beverages[0])
-   
-    # select one size for the order
-    id_size_random = random.choice(id_new_sizes)
-    size_choosed = get_element_by_id(conn,'size',id_size_random) 
     
-    # get ingredients and beverage by id (random)
-    
-    new_ingredients_list = get_list_elements_by_random_id('ingredient', id_new_ingredients)
-    new_beverages_list =get_list_elements_by_random_id('beverage', id_new_beverages)
-    
-    total_price = calculate_price(size_choosed, new_ingredients_list, new_beverages_list)
-    order_data = generate_random_order(customers_names[0], customers_dni[0], customers_phones[0], customers_address[0], total_price, size_choosed['_id'])
-    
-    populate_table_order(meta_data,order_data)
+    for _ in range(150):
+        insert_order_order_detail_fake_data()

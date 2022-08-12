@@ -99,3 +99,12 @@ def generate_random_order(customer_name, customer_dni, customer_phone, customer_
         "total_price": total_price,
         "size_id": size_id
     }
+
+def generate_random_order_detail(ingredient_price, order_id, ingredient_id, beverage_price, beverage_id):
+    return {
+        "ingredient_price": ingredient_price,
+        "order_id": order_id,
+        "ingredient_id": ingredient_id,
+        "beverage_price": beverage_price,
+        "beverage_id": beverage_id
+    }
