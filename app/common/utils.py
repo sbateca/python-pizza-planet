@@ -109,4 +109,3 @@ def generate_random_order_detail(ingredient_price, order_id, ingredient_id, beve
         "beverage_price": beverage_price,
         "beverage_id": beverage_id
     }
-    
