@@ -6,13 +6,29 @@ from sqlalchemy import create_engine, MetaData
 from .models import Ingredient, Order, OrderDetail, Size, Beverage, db
 from .serializers import (IngredientSerializer, OrderSerializer,
                           SizeSerializer, BeverageSerializer, ma)
+from ..common.singleton import singleton
 
 import os
+
+@singleton
+class ConnectDB:
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///{}'.format(os.path.join(os.getcwd(),"pizza.sqlite"), echo=False)
+
+
+    @classmethod
+    def connect_db(cls):
+        engine = create_engine(cls.SQLALCHEMY_DATABASE_URI, connect_args={'check_same_thread': False})
+        meta_data = MetaData(bind=engine)
+        MetaData.reflect(meta_data)
+        conn = engine.connect()
+        return conn    
+
 
 class BaseManager:
     model: Optional[db.Model] = None
     serializer: Optional[ma.SQLAlchemyAutoSchema] = None
     session = db.session
+
 
     @classmethod
     def get_all(cls):
@@ -66,19 +82,9 @@ class BeverageManager(BaseManager):
 class OrderManager(BaseManager):
     model = Order
     serializer = OrderSerializer
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///{}'.format(os.path.join(os.getcwd(),"pizza.sqlite"), echo=False)
     
+    connectDB = ConnectDB()
     
-    @classmethod
-    def connect_db(cls):
-        engine = create_engine(cls.SQLALCHEMY_DATABASE_URI, connect_args={'check_same_thread': False})
-        meta_data = MetaData(bind=engine)
-        MetaData.reflect(meta_data)
-        conn = engine.connect()
-        return conn
-        
-    
-
     @classmethod
     def create(cls, order_data: dict, ingredients: List[Ingredient], beverages: List[Beverage]):
         new_order = cls.model(**order_data)
@@ -101,7 +107,7 @@ class OrderManager(BaseManager):
 
     @classmethod
     def get_max_ingredient_saled(cls):
-        conn = cls.connect_db()
+        conn = cls.connectDB.connect_db()
         query_text = "select max(CI.quantity) total_quantity, CI.name from (select count(ingredient_id) as quantity, ing.name as name from order_detail od, ingredient ing where ingredient_id is not null AND ing._id = od.ingredient_id group by ingredient_id) as CI"
         result = conn.execute(query_text).fetchall()
         return dict(result[0])
@@ -109,7 +115,7 @@ class OrderManager(BaseManager):
 
     @classmethod
     def get_highest_earning_month(cls):
-        conn = cls.connect_db()
+        conn = cls.connectDB.connect_db()
         query_text = """select max(MS.total_price) total_price, MS.date_month month from (SELECT sum(total_price) as total_price, strftime('%Y %m',date) as date_month from "order" group by strftime('%Y %m',date)) as MS"""
         result = conn.execute(query_text).fetchall()
         return dict(result[0])
@@ -117,7 +123,7 @@ class OrderManager(BaseManager):
 
     @classmethod
     def get_three_best_customers(cls):
-        conn = cls.connect_db()
+        conn = cls.connectDB.connect_db()
         query_text = """select count (client_name) as quantity, client_name from "order" group by client_name order by count (client_name) desc limit 3 offset 0"""
         result = conn.execute(query_text).fetchall()
         query_result = []
