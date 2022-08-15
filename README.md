@@ -10,6 +10,7 @@ This is an example software for a pizzeria that takes customizable orders.
 - [Running the backend project](#running-the-backend-project)
 - [Running the frontend](#running-the-frontend)
 - [Testing the backend](#testing-the-backend)
+- [Code coverage status](#code-coverage-status)
 
 ## Getting started
 
@@ -112,3 +113,7 @@ ext install ritwickdey.LiveServer
 ```bash
 python3 manage.py test
 ```
+
+### Code Coverage Status
+[![codecov](https://codecov.io/gh/sbateca/python-pizza-planet/branch/main/graph/badge.svg?token=FLTKTKQHYI)](https://codecov.io/gh/sbateca/python-pizza-planet)
+
