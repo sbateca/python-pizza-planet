@@ -10,7 +10,7 @@ def client_data_mock() -> dict:
         'client_dni': get_random_sequence(),
         'client_name': get_random_string(),
         'client_phone': get_random_sequence(),
-        'date': get_random_date()
+        'date': None
     }
 
 
@@ -25,14 +25,16 @@ def client_data():
 
 
 @pytest.fixture
-def order(create_ingredients, create_sizes, client_data) -> dict:
+def order(create_ingredients, create_sizes, create_beverages, client_data) -> dict:
     ingredients = [ingredient.get('_id') for ingredient in create_ingredients]
+    beverages = [beverage.get('_id') for beverage in create_beverages]
     sizes = [size.get('_id') for size in create_sizes]
     size_id = sizes[0].get('_id')
     return {
         **client_data_mock(),
         'total_price': get_random_price(),
         'ingredients': shuffle_list(ingredients)[:5],
+        'beverages': shuffle_list(beverages)[:5],
         'size_id': size_id
     }
     
@@ -51,15 +53,17 @@ def create_order(client, order_uri, create_ingredients, create_sizes, create_bev
 
 
 @pytest.fixture
-def create_orders(client, order_uri, create_ingredients, create_sizes) -> list:
+def create_orders(client, order_uri, create_ingredients, create_sizes, create_beverages) -> list:
     ingredients = [ingredient.get('_id') for ingredient in create_ingredients]
     sizes = [size.get('_id') for size in create_sizes]
+    beverages = [beverage.get('_id') for beverage in create_beverages]
     orders = []
     for _ in range(10):
         new_order = client.post(order_uri, json={
             **client_data_mock(),
             'ingredients': shuffle_list(ingredients)[:5],
-            'size_id': shuffle_list(sizes)[0]
+            'size_id': shuffle_list(sizes)[0],
+            'beverages': shuffle_list(beverages)[:5]
         })
         orders.append(new_order)
     return orders
