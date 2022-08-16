@@ -7,27 +7,6 @@ import os
 import random
 
 
-def populate_size_table(meta_data):
-    size_data = get_random_size()
-    table = meta_data.tables['size']
-    new_size_db = table.insert().values(size_data).return_defaults()
-    new_size_db.execute()
-    
-    
-def populate_ingredient_table(meta_data):
-    ingredient_data = get_random_ingredient()
-    table = meta_data.tables['ingredient']
-    new_ingredient_db = table.insert().values(ingredient_data).return_defaults()
-    new_ingredient_db.execute()
-
-
-def populate_beverage_table(meta_data):
-    beverage_data = get_random_beverage()
-    table = meta_data.tables['beverage']
-    new_beverage_db = table.insert().values(beverage_data).return_defaults()
-    new_beverage_db.execute()
-
-
 def populate_table(meta_data, table_name, position):
     data = dict()
     table = None
