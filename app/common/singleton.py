@@ -1,8 +1,7 @@
-def singleton(cls):
+def singleton(class_name):
     instances = dict()
-    
     def wrap(*args, **kwargs):
-        if cls not in instances:
-            instances[cls] = cls(*args, **kwargs)
-        return instances[cls]
+        if class_name not in instances:
+            instances[class_name] = class_name(*args, **kwargs)
+        return instances[class_name]
     return wrap

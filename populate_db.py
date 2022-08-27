@@ -1,6 +1,6 @@
-from app.common.utils import (generate_random_list_dni_customers, get_random_size, get_random_ingredient,
-                              get_random_beverage, generate_random_list_names, generate_random_list_phone_customers,
-                              generate_random_list_address_customers, generate_random_order, generate_random_order_detail)
+from app.common.utils import (get_random_list_dni_customers, get_random_size, get_random_ingredient,
+                              get_random_beverage, get_random_list_names, get_random_list_phone_customers,
+                              get_random_list_address_customers, get_random_order, get_random_order_detail)
 from sqlalchemy import create_engine, MetaData, text
 
 import os
@@ -33,9 +33,9 @@ def populate_table_order_order_detail(meta_data, data, table_name):
     return result.inserted_primary_key_rows[0]
 
 
-def get_element_by_id(conn, table_name, id):
+def get_element_by_id(connection, table_name, id):
     query_text = f"select * from {table_name} where _id = {id}"
-    result = conn.execute(query_text).fetchall()
+    result = connection.execute(query_text).fetchall()
     return dict(result[0])
 
 
@@ -44,7 +44,7 @@ def get_list_elements_by_random_id(table_name, new_id_list):
     choosed_elements = []
     for _ in range(quantity_elements):
         position_id_random_element = random.randint(0, len(new_id_list)-1)
-        choosed_element = get_element_by_id(conn, table_name, new_id_list[position_id_random_element])
+        choosed_element = get_element_by_id(connection, table_name, new_id_list[position_id_random_element])
         choosed_elements.append(choosed_element)
     return choosed_elements
 
@@ -64,14 +64,14 @@ def calculate_price(size_choosed, new_ingredients_list, new_beverages_list):
 def insert_order_order_detail_fake_data():
      # select one size for the order
     id_size_random = random.choice(id_new_sizes)
-    size_choosed = get_element_by_id(conn,'size',id_size_random) 
+    size_choosed = get_element_by_id(connection,'size',id_size_random) 
     
     # get ingredients and beverage by id (random)
     new_ingredients_list = get_list_elements_by_random_id('ingredient', id_new_ingredients)
     new_beverages_list =get_list_elements_by_random_id('beverage', id_new_beverages)
     
     total_price = calculate_price(size_choosed, new_ingredients_list, new_beverages_list)
-    order_data = generate_random_order(customers_names[random.randint(0, len(customers_names)-1)],
+    order_data = get_random_order(customers_names[random.randint(0, len(customers_names)-1)],
                                        customers_dni[random.randint(0, len(customers_dni)-1)],
                                        customers_phones[random.randint(0, len(customers_phones)-1)],
                                        customers_address[random.randint(0, len(customers_address)-1)],
@@ -82,11 +82,11 @@ def insert_order_order_detail_fake_data():
     
     # generate order detail
     for ingredient in new_ingredients_list:
-        order_detail_data = generate_random_order_detail(ingredient['price'], order_id[0], ingredient['_id'], None, None)
+        order_detail_data = get_random_order_detail(ingredient['price'], order_id[0], ingredient['_id'], None, None)
         populate_table_order_order_detail(meta_data, order_detail_data, 'order_detail')
     
     for beverage in new_beverages_list:
-        order_detail_data = generate_random_order_detail(None, order_id[0], None, beverage['price'], beverage['_id'])
+        order_detail_data = get_random_order_detail(None, order_id[0], None, beverage['price'], beverage['_id'])
         populate_table_order_order_detail(meta_data, order_detail_data, 'order_detail')
            
 
@@ -97,14 +97,13 @@ if __name__ == "__main__":
     engine = create_engine(SQLALCHEMY_DATABASE_URI)
     meta_data = MetaData(bind=engine)
     MetaData.reflect(meta_data)
-    conn = engine.connect()
+    connection = engine.connect()
 
-    # select_table_example(conn)
     customers_quantity = 15
-    customers_names = generate_random_list_names(customers_quantity)
-    customers_dni = generate_random_list_dni_customers(customers_quantity)
-    customers_phones = generate_random_list_phone_customers(customers_quantity)
-    customers_address = generate_random_list_address_customers(customers_quantity)
+    customers_names = get_random_list_names(customers_quantity)
+    customers_dni = get_random_list_dni_customers(customers_quantity)
+    customers_phones = get_random_list_phone_customers(customers_quantity)
+    customers_address = get_random_list_address_customers(customers_quantity)
     
     id_new_sizes = []
     id_new_ingredients = []

@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify, request
 
 from .base_service import BaseService
 from ..controllers.factory_controller import FactoryController
-from ..controllers import BeverageController
+
 
 beverage = Blueprint('beverage', __name__)
 base_service = BaseService()

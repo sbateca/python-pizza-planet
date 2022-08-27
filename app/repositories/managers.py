@@ -21,7 +21,7 @@ class ConnectDB:
         meta_data = MetaData(bind=engine)
         MetaData.reflect(meta_data)
         conn = engine.connect()
-        return conn    
+        return conn
 
 
 class BaseManager:
