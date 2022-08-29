@@ -83,8 +83,6 @@ class OrderManager(BaseManager):
     model = Order
     serializer = OrderSerializer
     
-    connectDB = ConnectDB()
-    
     @classmethod
     def create(cls, order_data: dict, ingredients: List[Ingredient], beverages: List[Beverage]):
         new_order = cls.model(**order_data)
@@ -105,6 +103,18 @@ class OrderManager(BaseManager):
         raise NotImplementedError(f'Method not suported for {cls.__name__}')
 
 
+class IndexManager(BaseManager):
+
+    @classmethod
+    def test_connection(cls):
+        cls.session.query(column('1')).from_statement(text('SELECT 1')).all()
+
+class ReportManager():
+
+    
+    connectDB = ConnectDB()
+    
+    
     @classmethod
     def get_max_ingredient_saled(cls):
         conn = cls.connectDB.connect_db()
@@ -130,10 +140,3 @@ class OrderManager(BaseManager):
         for item in result:
             query_result.append(dict(item))
         return query_result
-
-
-class IndexManager(BaseManager):
-
-    @classmethod
-    def test_connection(cls):
-        cls.session.query(column('1')).from_statement(text('SELECT 1')).all()

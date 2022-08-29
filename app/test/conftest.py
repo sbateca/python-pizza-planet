@@ -17,6 +17,8 @@ from .fixtures.size import (size_mock, size_uri, size, sizes,
 from .fixtures.beverage import (beverage_mock, beverage_uri, beverage,
                                 beverages, create_beverage, create_beverages)
 
+from .fixtures.database import database_mock
+
 
 @pytest.fixture
 def app():
