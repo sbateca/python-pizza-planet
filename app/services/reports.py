@@ -1,31 +1,14 @@
-from app.common.http_methods import GET, POST
-from flask import Blueprint, jsonify, request
+from app.common.http_methods import GET
+from flask import Blueprint, jsonify
 
-from .base_service import BaseService
 from ..controllers.factory_controller import FactoryController
 
 
-order = Blueprint('order', __name__)
-base_service = BaseService()
-controller = FactoryController.get_controller('order')
+report = Blueprint('report', __name__)
+controller = FactoryController.get_controller('report')
 
 
-@order.route('/', methods=POST)
-def create_order():
-    return base_service.create(controller)
-
-
-@order.route('/id/<_id>', methods=GET)
-def get_order_by_id(_id: int):
-    return base_service.get_by_id(_id, controller)
-
-
-@order.route('/', methods=GET)
-def get_all_orders():
-    return base_service.get_all(controller)
-
-
-@order.route('/report/most-saled-ingredient', methods=GET)
+@report.route('/most-saled-ingredient', methods=GET)
 def get_max_ingredient_saled():
     ingredient, error = controller.get_max_ingredient_saled()
     response = ingredient if not error else {'error': error}
@@ -33,7 +16,7 @@ def get_max_ingredient_saled():
     return jsonify(response), status_code
 
 
-@order.route('/report/highest-earning-month', methods=GET)
+@report.route('/highest-earning-month', methods=GET)
 def get_highest_earning_month():
     month, error = controller.get_highest_earning_month()
     response = month if not error else {'error': error}
@@ -41,7 +24,7 @@ def get_highest_earning_month():
     return jsonify(response), status_code
 
 
-@order.route('/report/best-three-customers', methods=GET)
+@report.route('/best-three-customers', methods=GET)
 def get_three_best_customers():
     customers, error = controller.get_three_best_customers()
     response = customers if not error else {'error': error}

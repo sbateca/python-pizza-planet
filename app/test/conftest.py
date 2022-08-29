@@ -7,11 +7,17 @@ from app.plugins import db, ma
 # flake8: noqa
 from app.repositories.models import Ingredient, Order, OrderDetail, Size
 
-from .fixtures.ingredient import *
-from .fixtures.order import *
-from .fixtures.size import *
-from .fixtures.ingredient import *
-from .fixtures.beverage import *
+from .fixtures.ingredient import (ingredient_mock, ingredient_uri,
+                                  ingredient, ingredients,
+                                  create_ingredient, create_ingredients)
+from .fixtures.order import (client_data_mock, order_uri, client_data,
+                             order, create_order, create_orders)
+from .fixtures.size import (size_mock, size_uri, size, sizes,
+                            create_size, create_sizes)
+from .fixtures.beverage import (beverage_mock, beverage_uri, beverage,
+                                beverages, create_beverage, create_beverages)
+
+from .fixtures.database import database_mock
 
 
 @pytest.fixture

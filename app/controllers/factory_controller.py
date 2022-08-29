@@ -2,7 +2,7 @@ from .beverage import BeverageController
 from .size import SizeController
 from .ingredient import IngredientController
 from .order import OrderController
-
+from .reports import ReportController
 
 class FactoryController:
 
@@ -16,5 +16,7 @@ class FactoryController:
             return IngredientController
         elif controller_type == 'order':
             return OrderController
+        elif controller_type == 'report':
+            return ReportController
         else:
             return None

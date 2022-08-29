@@ -1,7 +1,5 @@
 import pytest
 
-from app.test.utils.functions import get_random_string, get_random_sequence, get_random_phone
-
 
 def test_create_order_service(create_order):
     order = create_order.json
